@@ -26,10 +26,14 @@ extension UIVisualEffectView {
         set {
             prepareForChanges()
             sourceOver?.setValue(newValue, forKeyPath: "color")
+            self.disableSaturation()
             sourceOver?.perform(Selector(("applyRequestedEffectToView:")), with: overlayView)
             applyChanges()
             overlayView?.backgroundColor = newValue
         }
+    }
+    func disableSaturation() {
+        colorSaturateFilter?.requestedValues?["inputAmount"] = 1.0
     }
 }
 
@@ -42,6 +46,9 @@ private extension UIVisualEffectView {
     }
     var gaussianBlur: NSObject? {
         return backdropView?.value(forKey: "filters", withFilterType: "gaussianBlur")
+    }
+    var colorSaturateFilter: NSObject? {
+        return backdropView?.value(forKey: "filters", withFilterType: "colorSaturate")
     }
     var sourceOver: NSObject? {
         return overlayView?.value(forKey: "viewEffects", withFilterType: "sourceOver")
